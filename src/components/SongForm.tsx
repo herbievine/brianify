@@ -30,7 +30,7 @@ const SongForm: React.FC<ISongFormProps> = ({ onSubmit }) => {
   return (
     <div className="w-full flex flex-col">
       <form onSubmit={handleSubmit} className="w-full flex flex-col space-y-4">
-        <div className="w-full flex flex-col sm:flex-row sm:space-x-4">
+        <div className="w-full flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
           <Field
             id="title"
             label="Song Title"

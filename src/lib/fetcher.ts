@@ -1,5 +1,9 @@
-const fetcher = <T>(url: string, schema: Zod.AnyZodObject): Promise<T> =>
-  fetch(url)
+const fetcher = <T>(
+  url: string,
+  schema: Zod.AnyZodObject,
+  config?: RequestInit
+): Promise<T> =>
+  fetch(url, config)
     .then((res) => res.json())
     .then((data) => schema.parse(data) as T);
 

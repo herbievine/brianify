@@ -2,6 +2,7 @@ import type React from "react";
 import { YoutubeVideoSchema } from "../hooks/useYoutube";
 import * as z from "zod";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 
 interface IDisplayResultsProps {
@@ -10,6 +11,7 @@ interface IDisplayResultsProps {
 
 const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
   const [videoIndex, setVideoIndex] = useState(0);
+  const navigate = useNavigate();
 
   const next = () => {
     if (videoIndex < videos.length - 1) {
@@ -43,7 +45,10 @@ const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
           />
         </a>
       </div>
-      <Button onClick={() => null} label="Download (coming soon)" />
+      <Button
+        onClick={() => navigate(`/${videos[videoIndex].id.videoId}`)}
+        label="Download"
+      />
       <div className="flex justify-evenly items-center space-x-4">
         <Button onClick={prev} disabled={videoIndex === 0} label="Previous" />
         <Button
