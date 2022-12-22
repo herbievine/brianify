@@ -1,4 +1,3 @@
-import { Fetcher } from "swr";
 import useSWRImmutable from "swr/immutable";
 import { fetcher } from "../lib/fetcher";
 import * as z from "zod";
