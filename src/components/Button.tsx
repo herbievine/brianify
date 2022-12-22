@@ -10,7 +10,7 @@ const Button: React.FC<IButtonProps> = ({ label, onClick, ...props }) => {
     <button
       {...props}
       onClick={onClick}
-      className="w-full py-2 px-4 rounded-lg border-2 border-gray-700 bg-transparent focus:ring-none placeholder-gray-500"
+      className="w-full py-2 px-4 rounded-lg border-2 border-gray-700 bg-transparent focus:ring-none placeholder-gray-500 truncate"
     >
       {label}
     </button>

@@ -1,9 +1,9 @@
 import type React from "react";
 import { YoutubeVideoSchema } from "../hooks/useYoutube";
 import * as z from "zod";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Button from "./Button";
+import { useConverter } from "../hooks/useConverter";
 
 interface IDisplayResultsProps {
   videos: z.infer<typeof YoutubeVideoSchema>[];
@@ -11,7 +11,16 @@ interface IDisplayResultsProps {
 
 const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
   const [videoIndex, setVideoIndex] = useState(0);
-  const navigate = useNavigate();
+  const [videoId, setVideoId] = useState<string | null>(null);
+  const { data, isLoading } = useConverter(videoId);
+
+  useEffect(() => {
+    if (!isLoading && data?.link) {
+      if (Math.random() * 100 === 69)
+        window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+      else window.open(data.link);
+    }
+  }, [isLoading, data]);
 
   const next = () => {
     if (videoIndex < videos.length - 1) {
@@ -27,7 +36,6 @@ const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
 
   return (
     <div className="w-full flex flex-col space-y-4">
-      {/* display image */}
       <div className="w-full flex justify-between items-center font-black uppercase text-sm">
         <h3 className="truncate">{videos[videoIndex].snippet.title}</h3>
         <span className="pl-6 text-xs">(click image to play)</span>
@@ -46,7 +54,7 @@ const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
         </a>
       </div>
       <Button
-        onClick={() => navigate(`/${videos[videoIndex].id.videoId}`)}
+        onClick={() => setVideoId(videos[videoIndex].id.videoId)}
         label="Download"
       />
       <div className="flex justify-evenly items-center space-x-4">
