@@ -49,7 +49,7 @@ const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
           <img
             src={videos[videoIndex].snippet.thumbnails.high.url}
             alt={videos[videoIndex].snippet.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-lg"
           />
         </a>
       </div>
