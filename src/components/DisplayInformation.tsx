@@ -33,7 +33,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({ tracks }) => {
           <span
             key={track.trackId}
             onClick={() => setTrackIndex(index)}
-            className={`ml-4 text-xs ${
+            className={`ml-4 text-xs cursor-pointer ${
               index !== trackIndex && "text-gray-500"
             }`}
           >
