@@ -16,7 +16,7 @@ interface IAppProps {}
 
 const App: React.FC<IAppProps> = ({}) => {
   const { error } = useError();
-  const { songData } = useSongDataStore((s) => s);
+  const { songData, clearSongData } = useSongDataStore((s) => s);
   const { data: converterData, isLoading: converterLoading } = useConverter(
     songData.youtubeId
   );
@@ -36,6 +36,8 @@ const App: React.FC<IAppProps> = ({}) => {
       if (Math.random() * 100 === 69)
         window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
       else window.open(converterData.link);
+
+      clearSongData();
     }
   }, [converterLoading, converterData]);
 

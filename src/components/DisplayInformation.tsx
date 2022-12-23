@@ -56,7 +56,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({ tracks }) => {
           })
         }
         next={next}
-        nextDisabled={trackIndex === tracks.length}
+        nextDisabled={trackIndex === tracks.length - 1}
         prev={prev}
         prevDisabled={trackIndex === 0}
       />

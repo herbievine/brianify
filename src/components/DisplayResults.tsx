@@ -48,7 +48,7 @@ const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
         label="Download"
         action={() => setSongData({ youtubeId: videos[videoIndex].id.videoId })}
         next={next}
-        nextDisabled={videoIndex === videos.length}
+        nextDisabled={videoIndex === videos.length - 1}
         prev={prev}
         prevDisabled={videoIndex === 0}
       />

@@ -9,13 +9,10 @@ interface ISongFormProps {
 }
 
 const SongForm: React.FC<ISongFormProps> = ({ onSubmit }) => {
-  const { songData, clearSongData } = useSongDataStore((s) => s);
+  const { input, songData, clearSongData } = useSongDataStore((s) => s);
   const { values, touched, errors, handleChange, handleSubmit, handleBlur } =
     useFormik({
-      initialValues: {
-        title: "",
-        artist: "",
-      },
+      initialValues: input,
       validateOnBlur: true,
       validate(values) {
         const errors: { title?: string; artist?: string } = {};
@@ -54,7 +51,7 @@ const SongForm: React.FC<ISongFormProps> = ({ onSubmit }) => {
         </div>
         <div className="flex justify-evenly items-center space-x-4">
           <Button label="Submit" type="submit" />
-          {(songData.itunesId || songData.youtubeId) && (
+          {songData.itunesId && songData.youtubeId && (
             <Button onClick={clearSongData} label="Cancel" />
           )}
         </div>
