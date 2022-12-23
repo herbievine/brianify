@@ -32,6 +32,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({ tracks }) => {
         {tracks.map((track, index) => (
           <span
             key={track.trackId}
+            onClick={() => setTrackIndex(index)}
             className={`ml-4 text-xs ${
               index !== trackIndex && "text-gray-500"
             }`}
