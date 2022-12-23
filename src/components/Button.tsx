@@ -2,7 +2,6 @@ import type React from "react";
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
-  onClick: () => void;
 }
 
 const Button: React.FC<IButtonProps> = ({ label, onClick, ...props }) => {

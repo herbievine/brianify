@@ -71,8 +71,12 @@ const useYoutube = (query?: string | null) => {
   const { setError } = useError();
 
   useEffect(() => {
-    if (error) setError("Error fetching data from YouTube API");
+    if (error) setError("Error fetching data from the YouTube API");
   }, [error]);
+
+  useEffect(() => {
+    console.log(rest);
+  }, [rest]);
 
   return rest;
 };

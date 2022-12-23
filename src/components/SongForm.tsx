@@ -2,12 +2,14 @@ import type React from "react";
 import { useFormik } from "formik";
 import Field from "./Field";
 import Button from "./Button";
+import { useSongDataStore } from "../hooks/useSongDataStore";
 
 interface ISongFormProps {
   onSubmit: (values: { title: string; artist: string }) => void;
 }
 
 const SongForm: React.FC<ISongFormProps> = ({ onSubmit }) => {
+  const { songData, clearSongData } = useSongDataStore((s) => s);
   const { values, touched, errors, handleChange, handleSubmit, handleBlur } =
     useFormik({
       initialValues: {
@@ -50,7 +52,13 @@ const SongForm: React.FC<ISongFormProps> = ({ onSubmit }) => {
             onBlur={handleBlur}
           />
         </div>
-        <Button label="Submit" onClick={() => null} type="submit" />
+        <div className="flex justify-evenly items-center space-x-4">
+          <Button label="Submit" type="submit" />
+          {(songData.itunesId || songData.youtubeId) && (
+            <Button onClick={clearSongData} label="Cancel" />
+          )}
+        </div>
+        {/* <Button label="Submit" onClick={() => null} type="submit" /> */}
       </form>
     </div>
   );
