@@ -34,11 +34,9 @@ const useConverter = (id?: string | null) => {
   );
   const { setError } = useError();
 
-  console.log(rest);
-
   useEffect(() => {
     if (error) {
-      setError("Error fetching data from YouTube API");
+      setError("Error fetching data from the Converter API");
       console.error(error);
     }
   }, [error]);

@@ -1,9 +1,9 @@
 import type React from "react";
 import { YoutubeVideoSchema } from "../hooks/useYoutube";
 import * as z from "zod";
-import { useEffect, useState } from "react";
-import Button from "./Button";
-import { useConverter } from "../hooks/useConverter";
+import { useState } from "react";
+import { useSongDataStore } from "../hooks/useSongDataStore";
+import Controls from "./Controls";
 
 interface IDisplayResultsProps {
   videos: z.infer<typeof YoutubeVideoSchema>[];
@@ -11,16 +11,7 @@ interface IDisplayResultsProps {
 
 const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
   const [videoIndex, setVideoIndex] = useState(0);
-  const [videoId, setVideoId] = useState<string | null>(null);
-  const { data, isLoading } = useConverter(videoId);
-
-  useEffect(() => {
-    if (!isLoading && data?.link) {
-      if (Math.random() * 100 === 69)
-        window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-      else window.open(data.link);
-    }
-  }, [isLoading, data]);
+  const { setSongData } = useSongDataStore((s) => s);
 
   const next = () => {
     if (videoIndex < videos.length - 1) {
@@ -35,7 +26,7 @@ const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
   };
 
   return (
-    <div className="w-full flex flex-col space-y-4">
+    <div className="w-full flex flex-col space-y-6">
       <div className="w-full flex justify-between items-center font-black uppercase text-sm">
         <h3 className="truncate">{videos[videoIndex].snippet.title}</h3>
         <span className="pl-6 text-xs">(click image to play)</span>
@@ -53,18 +44,14 @@ const DisplayResults: React.FC<IDisplayResultsProps> = ({ videos }) => {
           />
         </a>
       </div>
-      <Button
-        onClick={() => setVideoId(videos[videoIndex].id.videoId)}
+      <Controls
         label="Download"
+        action={() => setSongData({ youtubeId: videos[videoIndex].id.videoId })}
+        next={next}
+        nextDisabled={videoIndex === videos.length}
+        prev={prev}
+        prevDisabled={videoIndex === 0}
       />
-      <div className="flex justify-evenly items-center space-x-4">
-        <Button onClick={prev} disabled={videoIndex === 0} label="Previous" />
-        <Button
-          onClick={next}
-          disabled={videoIndex === videos.length}
-          label="Next"
-        />
-      </div>
     </div>
   );
 };

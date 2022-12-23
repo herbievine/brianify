@@ -14,6 +14,7 @@ specifiers:
   typescript: ^4.9.3
   vite: ^4.0.0
   zod: ^3.20.2
+  zustand: ^4.1.5
 
 dependencies:
   formik: 2.2.9_react@18.2.0
@@ -21,6 +22,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   swr: 2.0.0_react@18.2.0
   zod: 3.20.2
+  zustand: 4.1.5_react@18.2.0
 
 devDependencies:
   '@types/react': 18.0.26
@@ -1325,4 +1327,20 @@ packages:
 
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+    dev: false
+
+  /zustand/4.1.5_react@18.2.0:
+    resolution: {integrity: sha512-PsdRT8Bvq22Yyh1tvpgdHNE7OAeFKqJXUxtJvj1Ixw2B9O2YZ1M34ImQ+xyZah4wZrR4lENMoDUutKPpyXCQ/Q==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false

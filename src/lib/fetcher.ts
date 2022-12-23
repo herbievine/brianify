@@ -5,6 +5,10 @@ const fetcher = <T>(
 ): Promise<T> =>
   fetch(url, config)
     .then((res) => res.json())
-    .then((data) => schema.parse(data) as T);
+    .then((data) => {
+      console.log(data);
+
+      return schema.parse(data) as T;
+    });
 
 export { fetcher };

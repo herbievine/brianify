@@ -1,26 +1,43 @@
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DisplayError from "./components/DisplayError";
+import DisplayInformation from "./components/DisplayInformation";
 import DisplayResults from "./components/DisplayResults";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import SongForm from "./components/SongForm";
+import { useConverter } from "./hooks/useConverter";
 import { useError } from "./hooks/useError";
+import { useItunes } from "./hooks/useItunes";
+import { useSongDataStore } from "./hooks/useSongDataStore";
 import { useYoutube } from "./hooks/useYoutube";
 
 interface IAppProps {}
 
 const App: React.FC<IAppProps> = ({}) => {
   const { error } = useError();
+  const { songData } = useSongDataStore((s) => s);
+  const { data: converterData, isLoading: converterLoading } = useConverter(
+    songData.youtubeId
+  );
   const [input, setInput] = useState({
     title: "",
     artist: "",
   });
-  const { data } = useYoutube(
-    input.title.length === 0
-      ? null
-      : input.artist + " " + input.title + " audio"
+  const { data: youtubeData } = useYoutube(
+    !songData.title ? null : songData.title + " " + songData.artist + " audio"
   );
+  const { data: itunesData } = useItunes(
+    input.title.length === 0 ? null : input.artist + " " + input.title
+  );
+
+  useEffect(() => {
+    if (!converterLoading && converterData?.link) {
+      if (Math.random() * 100 === 69)
+        window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+      else window.open(converterData.link);
+    }
+  }, [converterLoading, converterData]);
 
   return (
     <div className="w-full h-screen font-semibold bg-gray-900 text-gray-200 whitespace-nowrap">
@@ -28,8 +45,11 @@ const App: React.FC<IAppProps> = ({}) => {
         <Header />
         {error && <DisplayError />}
         <SongForm onSubmit={setInput} />
-        {input.title.length > 0 && data?.items && (
-          <DisplayResults videos={data.items} />
+        {input.title.length > 0 && itunesData?.resultCount && !youtubeData && (
+          <DisplayInformation tracks={itunesData.results.slice(0, 5)} />
+        )}
+        {songData.title?.length && youtubeData?.items && (
+          <DisplayResults videos={youtubeData.items} />
         )}
         <Footer />
       </div>
