@@ -15,7 +15,7 @@ import { useYoutube } from "./hooks/useYoutube";
 interface IAppProps {}
 
 const App: React.FC<IAppProps> = ({}) => {
-  const { error } = useError();
+  const { error, setError } = useError();
   const { songData, clearSongData } = useSongDataStore((s) => s);
   const { data: converterData, isLoading: converterLoading } = useConverter(
     songData.youtubeId
@@ -33,9 +33,13 @@ const App: React.FC<IAppProps> = ({}) => {
 
   useEffect(() => {
     if (!converterLoading && converterData?.link) {
-      if (Math.random() * 100 === 69)
-        window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-      else window.open(converterData.link);
+      setError("");
+
+      const win = window.open(converterData.link);
+
+      if (!win || win.closed || typeof win.closed === "undefined") {
+        setError("Please allow popups for this website");
+      }
 
       clearSongData();
     }
