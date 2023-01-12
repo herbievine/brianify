@@ -29,19 +29,38 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({ tracks }) => {
     <div className="w-full flex flex-col space-y-6">
       <div className="w-full flex flex-col font-black uppercase text-sm space-y-2">
         <h3 className="truncate">Select your song from the list below:</h3>
-        {tracks.map((track, index) => (
-          <span
-            key={track.trackId}
-            onClick={() => setTrackIndex(index)}
-            className={`ml-4 text-xs cursor-pointer ${
-              index !== trackIndex && "text-gray-500"
-            }`}
-          >
-            {index + 1}. {index === trackIndex && "["}
-            {track.trackName} - {track.artistName}
-            {index === trackIndex && "]"}
-          </span>
-        ))}
+        {tracks
+          .filter(
+            (val, i, arr) =>
+              i ===
+              arr.findIndex(
+                (t) =>
+                  t.artistName.toLowerCase() === val.artistName.toLowerCase() &&
+                  t.trackName.toLowerCase() === val.trackName.toLowerCase()
+              )
+          )
+          .map((track, index) => (
+            <div
+              className="flex items-center space-x-4"
+              onClick={() => setTrackIndex(index)}
+            >
+              <img
+                src={track.artworkUrl100}
+                alt={`${track.artistName} ${track.trackName} Cover`}
+                className="w-12 rounded-lg"
+              />
+              <span
+                key={track.trackId}
+                className={`text-xs cursor-pointer truncate ${
+                  index !== trackIndex && "text-gray-500"
+                }`}
+              >
+                {index + 1}. {index === trackIndex && "["}
+                {track.trackName} - {track.artistName}
+                {index === trackIndex && "]"}
+              </span>
+            </div>
+          ))}
       </div>
       <Controls
         label="Select"
