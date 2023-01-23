@@ -36,16 +36,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
             );
           }
 
-          if (
-            a.trackName
-              .toLowerCase()
-              .includes(input.title.trim().toLowerCase()) <
-            b.trackName.toLowerCase().includes(input.title.trim().toLowerCase())
-          ) {
-            return 1;
-          } else {
-            return -1;
-          }
+          return 0;
         })
         .filter(
           (val, i, arr) =>
@@ -87,6 +78,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
         {computedTracks.length > 0 ? (
           computedTracks.map((track, index) => (
             <div
+              key={track.trackId}
               className="flex items-center space-x-4"
               onClick={() => setTrackIndex(index)}
             >
