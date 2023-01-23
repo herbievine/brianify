@@ -1,7 +1,7 @@
 import type React from "react";
 import { ItunesTrackSchema } from "../hooks/useItunes";
 import * as z from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSongDataStore } from "../hooks/useSongDataStore";
 import Controls from "./Controls";
 
@@ -20,8 +20,52 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
   const { setSongData } = useSongDataStore((s) => s);
   const [trackIndex, setTrackIndex] = useState(0);
 
+  const computedTracks = useMemo(
+    () =>
+      tracks
+        .filter((val) => {
+          console.log(
+            val.trackName.toLowerCase().match(/(edit|remix|version|parody)/g)
+          );
+
+          return !val.trackName
+            .toLowerCase()
+            .match(/(edit|remix|version|parody)/g);
+        })
+        .sort((a, b) => {
+          if (input.artist.length > 0) {
+            return (
+              b.artistName.toLowerCase().indexOf(input.artist.toLowerCase()) -
+              a.artistName.toLowerCase().indexOf(input.artist.toLowerCase())
+            );
+          }
+
+          if (
+            a.trackName
+              .toLowerCase()
+              .includes(input.title.trim().toLowerCase()) <
+            b.trackName.toLowerCase().includes(input.title.trim().toLowerCase())
+          ) {
+            return 1;
+          } else {
+            return -1;
+          }
+        })
+        .filter(
+          (val, i, arr) =>
+            i ===
+            arr.findIndex(
+              (t) =>
+                t.artistName.toLowerCase() === val.artistName.toLowerCase() &&
+                t.trackName.toLowerCase() === val.trackName.toLowerCase()
+            )
+        )
+        .slice(0, 5),
+    [input, tracks]
+  );
+
   const next = () => {
-    if (trackIndex < tracks.length - 1) {
+    if (trackIndex < computedTracks.length - 1) {
       setTrackIndex((prev) => prev + 1);
     }
   };
@@ -40,53 +84,8 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
     <div className="w-full flex flex-col space-y-6">
       <div className="w-full flex flex-col font-black uppercase text-sm space-y-2">
         <h3 className="truncate">Select your song from the list below:</h3>
-        {tracks
-          .filter(
-            // match words like "edit", "remix", "version", "parody"
-            (val) => {
-              console.log(
-                val.trackName
-                  .toLowerCase()
-                  .match(/(edit|remix|version|parody)/g)
-              );
-
-              return !val.trackName
-                .toLowerCase()
-                .match(/(edit|remix|version|parody)/g);
-            }
-          )
-          .sort((a, b) => {
-            if (input.artist.length > 0) {
-              return (
-                b.artistName.toLowerCase().indexOf(input.artist.toLowerCase()) -
-                a.artistName.toLowerCase().indexOf(input.artist.toLowerCase())
-              );
-            }
-
-            if (
-              a.trackName
-                .toLowerCase()
-                .includes(input.title.trim().toLowerCase()) <
-              b.trackName
-                .toLowerCase()
-                .includes(input.title.trim().toLowerCase())
-            ) {
-              return 1;
-            } else {
-              return -1;
-            }
-          })
-          .filter(
-            (val, i, arr) =>
-              i ===
-              arr.findIndex(
-                (t) =>
-                  t.artistName.toLowerCase() === val.artistName.toLowerCase() &&
-                  t.trackName.toLowerCase() === val.trackName.toLowerCase()
-              )
-          )
-          .slice(0, 5)
-          .map((track, index) => (
+        {computedTracks.length > 0 ? (
+          computedTracks.map((track, index) => (
             <div
               className="flex items-center space-x-4"
               onClick={() => setTrackIndex(index)}
@@ -107,22 +106,25 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
                 {index === trackIndex && "]"}
               </span>
             </div>
-          ))}
+          ))
+        ) : (
+          <span className="text-xs">No results found</span>
+        )}
       </div>
       <Controls
         label="Select"
         action={() =>
           setSongData({
-            itunesId: tracks[trackIndex].trackId,
-            title: tracks[trackIndex].trackName,
-            artist: tracks[trackIndex].artistName,
-            album: tracks[trackIndex].collectionName,
-            releaseDate: tracks[trackIndex].releaseDate.split("-")[0],
-            genre: tracks[trackIndex].primaryGenreName,
+            itunesId: computedTracks[trackIndex].trackId,
+            title: computedTracks[trackIndex].trackName,
+            artist: computedTracks[trackIndex].artistName,
+            album: computedTracks[trackIndex].collectionName,
+            releaseDate: computedTracks[trackIndex].releaseDate.split("-")[0],
+            genre: computedTracks[trackIndex].primaryGenreName,
           })
         }
         next={next}
-        nextDisabled={trackIndex === tracks.length - 1}
+        nextDisabled={trackIndex === computedTracks.length - 1}
         prev={prev}
         prevDisabled={trackIndex === 0}
       />
