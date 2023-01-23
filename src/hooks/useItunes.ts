@@ -18,6 +18,8 @@ export const ItunesTrackSchema = z.object({
   trackName: z.string(),
   artistName: z.string(),
   collectionName: z.string(),
+  artworkUrl30: z.string(),
+  artworkUrl60: z.string(),
   artworkUrl100: z.string(),
   releaseDate: z.string(),
   primaryGenreName: z.string(),

@@ -19,7 +19,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
 }) => {
   const { setSongData } = useSongDataStore((s) => s);
   const [trackIndex, setTrackIndex] = useState(0);
-  const [limit, setLimit] = useState(5);
+  const [offset, setOffset] = useState(0);
 
   const computedTracks = useMemo(
     () =>
@@ -46,44 +46,31 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
                 t.artistName.toLowerCase() === val.artistName.toLowerCase() &&
                 t.trackName.toLowerCase() === val.trackName.toLowerCase()
             )
-        )
-        .slice(0, limit),
-    [input, tracks, limit]
+        ),
+    [input, tracks]
   );
 
   const next = () => {
-    if (trackIndex < computedTracks.length - 1) {
-      setTrackIndex((prev) => prev + 1);
-    }
+    setOffset((prev) => prev + 5);
   };
 
   const prev = () => {
-    if (trackIndex > 0) {
-      setTrackIndex((prev) => prev - 1);
-    }
+    setOffset((prev) => prev - 5);
   };
 
   return (
     <div className="w-full flex flex-col space-y-6">
       <div className="w-full flex flex-col font-black uppercase text-sm space-y-2">
-        <div className="w-full flex items-center justify-between">
-          <h3 className="truncate">Select your song from the list below:</h3>
-          <button
-            className="text-xs text-gray-500"
-            onClick={() => setLimit((prev) => prev + 5)}
-          >
-            Show more
-          </button>
-        </div>
+        <h3 className="truncate">Select your song from the list below:</h3>
         {computedTracks.length > 0 ? (
-          computedTracks.map((track, index) => (
+          computedTracks.slice(offset, offset + 5).map((track, index) => (
             <div
               key={track.trackId}
               className="flex items-center space-x-4"
               onClick={() => setTrackIndex(index)}
             >
               <img
-                src={track.artworkUrl100}
+                src={track.artworkUrl60}
                 alt={`${track.artistName} ${track.trackName} Cover`}
                 className="w-12 rounded-lg"
               />
@@ -93,7 +80,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
                   index !== trackIndex && "text-gray-500"
                 }`}
               >
-                {index + 1}. {index === trackIndex && "["}
+                {offset + 1 + index}. {index === trackIndex && "["}
                 {track.trackName} - {track.artistName}
                 {index === trackIndex && "]"}
               </span>
@@ -115,10 +102,12 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
             genre: computedTracks[trackIndex].primaryGenreName,
           })
         }
+        nextLabel="Next Page"
         next={next}
-        nextDisabled={trackIndex === computedTracks.length - 1}
+        nextDisabled={offset + 5 >= computedTracks.length}
+        prevLabel="Previous Page"
         prev={prev}
-        prevDisabled={trackIndex === 0}
+        prevDisabled={offset === 0}
       />
     </div>
   );
