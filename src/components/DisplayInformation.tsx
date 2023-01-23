@@ -61,7 +61,12 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
   return (
     <div className="w-full flex flex-col space-y-6">
       <div className="w-full flex flex-col font-black uppercase text-sm space-y-2">
-        <h3 className="truncate">Select your song from the list below:</h3>
+        <h3 className="truncate">
+          Select your song from the list below:{" "}
+          <span className="text-xs text-gray-500">
+            ({computedTracks.length} found)
+          </span>
+        </h3>
         {computedTracks.length > 0 ? (
           computedTracks.slice(offset, offset + 5).map((track, index) => (
             <div
