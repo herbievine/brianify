@@ -1,15 +1,22 @@
 import type React from "react";
 import { ItunesTrackSchema } from "../hooks/useItunes";
 import * as z from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSongDataStore } from "../hooks/useSongDataStore";
 import Controls from "./Controls";
 
 interface IDisplayInformationProps {
+  input: {
+    title: string;
+    artist: string;
+  };
   tracks: z.infer<typeof ItunesTrackSchema>[];
 }
 
-const DisplayInformation: React.FC<IDisplayInformationProps> = ({ tracks }) => {
+const DisplayInformation: React.FC<IDisplayInformationProps> = ({
+  input,
+  tracks,
+}) => {
   const { setSongData } = useSongDataStore((s) => s);
   const [trackIndex, setTrackIndex] = useState(0);
 
@@ -25,11 +32,50 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({ tracks }) => {
     }
   };
 
+  useEffect(() => {
+    console.log("song data", input);
+  }, [input]);
+
   return (
     <div className="w-full flex flex-col space-y-6">
       <div className="w-full flex flex-col font-black uppercase text-sm space-y-2">
         <h3 className="truncate">Select your song from the list below:</h3>
         {tracks
+          .filter(
+            // match words like "edit", "remix", "version", "parody"
+            (val) => {
+              console.log(
+                val.trackName
+                  .toLowerCase()
+                  .match(/(edit|remix|version|parody)/g)
+              );
+
+              return !val.trackName
+                .toLowerCase()
+                .match(/(edit|remix|version|parody)/g);
+            }
+          )
+          .sort((a, b) => {
+            if (input.artist.length > 0) {
+              return (
+                b.artistName.toLowerCase().indexOf(input.artist.toLowerCase()) -
+                a.artistName.toLowerCase().indexOf(input.artist.toLowerCase())
+              );
+            }
+
+            if (
+              a.trackName
+                .toLowerCase()
+                .includes(input.title.trim().toLowerCase()) <
+              b.trackName
+                .toLowerCase()
+                .includes(input.title.trim().toLowerCase())
+            ) {
+              return 1;
+            } else {
+              return -1;
+            }
+          })
           .filter(
             (val, i, arr) =>
               i ===
@@ -39,6 +85,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({ tracks }) => {
                   t.trackName.toLowerCase() === val.trackName.toLowerCase()
               )
           )
+          .slice(0, 5)
           .map((track, index) => (
             <div
               className="flex items-center space-x-4"

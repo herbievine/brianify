@@ -52,7 +52,7 @@ const App: React.FC<IAppProps> = ({}) => {
         {error && <DisplayError />}
         <SongForm onSubmit={setInput} />
         {input.title.length > 0 && itunesData?.resultCount && !youtubeData && (
-          <DisplayInformation tracks={itunesData.results.slice(0, 5)} />
+          <DisplayInformation input={input} tracks={itunesData.results} />
         )}
         {songData.title?.length && youtubeData?.items && (
           <DisplayResults videos={youtubeData.items} />
