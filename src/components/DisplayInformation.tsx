@@ -66,13 +66,15 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
           computedTracks.slice(offset, offset + 5).map((track, index) => (
             <div
               key={track.trackId}
-              className="flex items-center space-x-4"
+              className={`flex items-center p-2 rounded-lg space-x-4 border-2 cursor-pointer ${
+                index === trackIndex ? "border-gray-200" : "border-gray-700"
+              }`}
               onClick={() => setTrackIndex(index)}
             >
               <img
                 src={track.artworkUrl60}
                 alt={`${track.artistName} ${track.trackName} Cover`}
-                className="w-12 rounded-lg"
+                className="w-10 rounded-md"
               />
               <span
                 key={track.trackId}
@@ -80,9 +82,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
                   index !== trackIndex && "text-gray-500"
                 }`}
               >
-                {offset + 1 + index}. {index === trackIndex && "["}
-                {track.trackName} - {track.artistName}
-                {index === trackIndex && "]"}
+                {offset + 1 + index}. {track.trackName} - {track.artistName}
               </span>
             </div>
           ))
@@ -94,12 +94,13 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
         label="Select"
         action={() =>
           setSongData({
-            itunesId: computedTracks[trackIndex].trackId,
-            title: computedTracks[trackIndex].trackName,
-            artist: computedTracks[trackIndex].artistName,
-            album: computedTracks[trackIndex].collectionName,
-            releaseDate: computedTracks[trackIndex].releaseDate.split("-")[0],
-            genre: computedTracks[trackIndex].primaryGenreName,
+            itunesId: computedTracks[offset + trackIndex].trackId,
+            title: computedTracks[offset + trackIndex].trackName,
+            artist: computedTracks[offset + trackIndex].artistName,
+            album: computedTracks[offset + trackIndex].collectionName,
+            releaseDate:
+              computedTracks[offset + trackIndex].releaseDate.split("-")[0],
+            genre: computedTracks[offset + trackIndex].primaryGenreName,
           })
         }
         nextLabel="Next Page"
