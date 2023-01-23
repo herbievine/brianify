@@ -19,6 +19,7 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
 }) => {
   const { setSongData } = useSongDataStore((s) => s);
   const [trackIndex, setTrackIndex] = useState(0);
+  const [limit, setLimit] = useState(5);
 
   const computedTracks = useMemo(
     () =>
@@ -55,8 +56,8 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
                 t.trackName.toLowerCase() === val.trackName.toLowerCase()
             )
         )
-        .slice(0, 5),
-    [input, tracks]
+        .slice(0, limit),
+    [input, tracks, limit]
   );
 
   const next = () => {
@@ -74,7 +75,15 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
   return (
     <div className="w-full flex flex-col space-y-6">
       <div className="w-full flex flex-col font-black uppercase text-sm space-y-2">
-        <h3 className="truncate">Select your song from the list below:</h3>
+        <div className="w-full flex items-center justify-between">
+          <h3 className="truncate">Select your song from the list below:</h3>
+          <button
+            className="text-xs text-gray-500"
+            onClick={() => setLimit((prev) => prev + 5)}
+          >
+            Show more
+          </button>
+        </div>
         {computedTracks.length > 0 ? (
           computedTracks.map((track, index) => (
             <div

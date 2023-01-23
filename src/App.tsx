@@ -24,10 +24,10 @@ const App: React.FC<IAppProps> = ({}) => {
     title: "",
     artist: "",
   });
-  const { data: youtubeData } = useYoutube(
+  const { data: youtubeData, isLoading: isLoadingYoutube } = useYoutube(
     !songData.title ? null : songData.title + " " + songData.artist + " audio"
   );
-  const { data: itunesData } = useItunes(
+  const { data: itunesData, isLoading: isLoadingItunes } = useItunes(
     input.title.length === 0 ? null : input.artist + " " + input.title
   );
 
@@ -51,11 +51,19 @@ const App: React.FC<IAppProps> = ({}) => {
         <Header />
         {error && <DisplayError />}
         <SongForm onSubmit={setInput} />
-        {input.title.length > 0 && itunesData?.resultCount && !youtubeData && (
-          <DisplayInformation input={input} tracks={itunesData.results} />
-        )}
-        {songData.title?.length && youtubeData?.items && (
-          <DisplayResults videos={youtubeData.items} />
+        {isLoadingItunes || isLoadingYoutube ? (
+          <div className="w-full flex justify-center">Loading...</div>
+        ) : (
+          <>
+            {input.title.length > 0 &&
+              !!itunesData?.resultCount &&
+              !youtubeData && (
+                <DisplayInformation input={input} tracks={itunesData.results} />
+              )}
+            {!!songData.title?.length && !!youtubeData?.items && (
+              <DisplayResults videos={youtubeData.items} />
+            )}
+          </>
         )}
         <Footer />
       </div>
