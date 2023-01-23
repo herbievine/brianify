@@ -1,7 +1,7 @@
 import type React from "react";
 import { ItunesTrackSchema } from "../hooks/useItunes";
 import * as z from "zod";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSongDataStore } from "../hooks/useSongDataStore";
 import Controls from "./Controls";
 
@@ -23,15 +23,10 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
   const computedTracks = useMemo(
     () =>
       tracks
-        .filter((val) => {
-          console.log(
-            val.trackName.toLowerCase().match(/(edit|remix|version|parody)/g)
-          );
-
-          return !val.trackName
-            .toLowerCase()
-            .match(/(edit|remix|version|parody)/g);
-        })
+        .filter(
+          (val) =>
+            !val.trackName.toLowerCase().match(/(edit|remix|version|parody)/g)
+        )
         .sort((a, b) => {
           if (input.artist.length > 0) {
             return (
@@ -75,10 +70,6 @@ const DisplayInformation: React.FC<IDisplayInformationProps> = ({
       setTrackIndex((prev) => prev - 1);
     }
   };
-
-  useEffect(() => {
-    console.log("song data", input);
-  }, [input]);
 
   return (
     <div className="w-full flex flex-col space-y-6">

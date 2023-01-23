@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import Field from "./Field";
 import Button from "./Button";
 import { useSongDataStore } from "../hooks/useSongDataStore";
+import { useEffect } from "react";
 
 interface ISongFormProps {
   onSubmit: (values: { title: string; artist: string }) => void;
@@ -25,6 +26,10 @@ const SongForm: React.FC<ISongFormProps> = ({ onSubmit }) => {
       },
       onSubmit,
     });
+
+  useEffect(() => {
+    console.log("songData", songData);
+  }, [songData]);
 
   return (
     <div className="w-full flex flex-col">
@@ -50,8 +55,9 @@ const SongForm: React.FC<ISongFormProps> = ({ onSubmit }) => {
           />
         </div>
         <div className="flex justify-evenly items-center space-x-4">
-          <Button label="Submit" type="submit" />
-          {songData.itunesId && songData.youtubeId && (
+          {!songData.itunesId ? (
+            <Button label="Submit" type="submit" />
+          ) : (
             <Button onClick={clearSongData} label="Cancel" />
           )}
         </div>
